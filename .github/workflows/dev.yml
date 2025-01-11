@@ -53,6 +53,9 @@ jobs:
 
       # needs: [linting]
       steps:
+        # Step 1: Check out the code
+        - name: Checkout code
+          uses: actions/checkout@v3
 
         # Step 5: Build and Push Docker Image
         - name: Build and push Docker image
