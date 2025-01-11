@@ -5,7 +5,7 @@ metadata:
   labels:
     app: sail-user-service
 spec:
-  replicas: 1 # Makes 1 replica
+  replicas: 1 # Makes 1 replica(s)
   selector:
     matchLabels:
       app: sail-user-service
