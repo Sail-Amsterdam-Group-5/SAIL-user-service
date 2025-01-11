@@ -18,7 +18,7 @@ spec:
       - name: sail-user-service
         image: ignacio6779/sail-user-service:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8080 # This is some kind of a port it seems like. Not sure tho
 ---
 apiVersion: v1
 kind: Service
