@@ -10,6 +10,6 @@ func LoadConfig() (*Config, error) {
 	return &Config{
 		KeycloakURL:   "http://keycloak-route-oscar-dev.apps.inholland.hcs-lab.nl",
 		KeycloakRealm: "sail-amsterdam",
-		Port:          "8080",
+		Port:          "8080", //default but might wanna change to 80
 	}, nil
 }
