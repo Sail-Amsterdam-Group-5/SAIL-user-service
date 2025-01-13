@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sail-user-service
-        image: ignacio6779/sail-user-service:4ee8fe6e2f72a4e9df37adc3da67b939884043b6
+        image: ignacio6779/sail-user-service:4dd5ca575b165d3923d0533a4962d4c4e0710e98
         ports:
         - containerPort: 8080 # This is some kind of a port it seems like. Not sure tho. Know it now, is def standard stuff
         resources:
