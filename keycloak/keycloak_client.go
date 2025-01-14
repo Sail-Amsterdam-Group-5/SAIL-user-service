@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"log"
 )
 
 type Config struct {
@@ -29,11 +30,14 @@ func NewKeycloakClient(cfg *config.Config) *Client {
 }
 
 func (kc *Client) GetClientToken() (string, error) {
+	log.Println("Getting client token")
+
 	url := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token", kc.config.KeycloakURL, kc.config.KeycloakRealm)
 
 	data := "client_id=user-microservice&client_secret=Z7njfSA8YR7kDkftQMKjlqzwM1yqnKLK&grant_type=client_credentials"
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
+		log.Println("Failed to create request")
 		return "", err
 	}
 
@@ -46,35 +50,48 @@ func (kc *Client) GetClientToken() (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		log.Println("Failed to get token")
 		return "", fmt.Errorf("Failed to get token: %s", resp.Status)
 	}
+	log.Println("Got token")
 
 	var tokenResponse TokenResponse
 	if err := json.NewDecoder(resp.Body).Decode(&tokenResponse); err != nil {
+		log.Println("Failed to decode token")
 		return "", err
 	}
+	log.Println("Succesfully decoded token")
 
 	return tokenResponse.AccessToken, nil
 }
 
 func (kc *Client) GetAllUsers() ([]models.User, error) {
+	log.Println("Getting all users")
+
 	token, err := kc.GetClientToken()
 	if err != nil {
+		log.Println("Failed to get token")
 		return nil, fmt.Errorf("Failed to get token: %s", err)
 	}
+	log.Println("Got token")
+
 
 	url := fmt.Sprintf("%s/admin/realms/%s/users", kc.config.KeycloakURL, kc.config.KeycloakRealm)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
+		log.Println("Failed to create request")
 		return nil, err
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
+	log.Println("Created request")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Println("Failed to get users")
 		return nil, err
 	}
 	defer resp.Body.Close()
+	log.Println("Got users")
 
 	var keycloakUsers []models.KeycloakUser
 	if err := json.NewDecoder(resp.Body).Decode(&keycloakUsers); err != nil {
@@ -93,27 +110,37 @@ func (kc *Client) GetAllUsers() ([]models.User, error) {
 		user.Roles = roles
 		users = append(users, *user)
 	}
+	log.Println("Returning users")
+
 	return users, nil
 }
 
 func (kc *Client) GetUserById(id string) (*models.User, error) {
+	log.Println("Getting user by id")
+
 	token, err := kc.GetClientToken()
 	if err != nil {
+		log.Println("Failed to get token")
 		return nil, fmt.Errorf("Failed to get token: %s", err)
 	}
+	log.Println("Got token")
 
 	url := fmt.Sprintf("%s/admin/realms/%s/users/%s", kc.config.KeycloakURL, kc.config.KeycloakRealm, id)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
+		log.Println("Failed to create request")
 		return nil, err
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
+	log.Println("Created request")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Println("Failed to get user")
 		return nil, err
 	}
 	defer resp.Body.Close()
+	log.Println("Got user")
 
 	var keycloakUser models.KeycloakUser
 	if err := json.NewDecoder(resp.Body).Decode(&keycloakUser); err != nil {
@@ -123,12 +150,16 @@ func (kc *Client) GetUserById(id string) (*models.User, error) {
 	//adding the roles
 	roles, err := kc.GetUserRoles(id)
 	if err != nil {
+		log.Println("Failed to get roles")
 		return nil, err
 	}
+	log.Println("Got roles")
 
 	user := keycloakUser.ToUser()
 	user.Roles = roles
 
+	log.Println("Returning user")
+	
 	return user, nil
 }
 
