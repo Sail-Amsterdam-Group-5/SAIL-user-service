@@ -12,7 +12,7 @@ import (
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatal("Error loading config: %v", err)
+		log.Fatalf("Error loading config: %v", err)
 	}
 
 	router := mux.NewRouter()

@@ -37,22 +37,6 @@ func (kc *KeycloakUser) getAttributeValue(key string) string {
 	return ""
 }
 
-type NewUser struct {
-	Username               string `json:"username"`
-	FirstName              string `json:"firstName"`
-	LastName               string `json:"lastName"`
-	Role                   string `json:"role"`
-	Function               string `json:"function"`
-	GroupID                string `json:"groupID"`
-	Email                  string `json:"email"`
-	Password               string `json:"password"`
-	NotificationPreference bool   `json:"notificationPreference"`
-}
-
-func (n *NewUser) SetDefaultValues() {
-	n.NotificationPreference = false
-}
-
 type Role struct {
 	ID   string `json:"id"`
 	Name string `json:"name"` //need to check on /role-mappings to see the naming

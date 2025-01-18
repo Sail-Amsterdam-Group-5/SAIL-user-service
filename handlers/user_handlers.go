@@ -6,7 +6,6 @@ import (
 
 	"SAIL-user-service/config"
 	"SAIL-user-service/keycloak"
-	"SAIL-user-service/models"
 
 	"github.com/gorilla/mux"
 )
@@ -32,19 +31,4 @@ func RegisterUserHandlers(router *mux.Router, cfg *config.Config) {
 		}
 		json.NewEncoder(w).Encode(user)
 	}).Methods("GET")
-
-	router.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		var newUser models.User
-		if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
-			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-			return
-		}
-
-		err := client.RegisterUser(newUser)
-		if err != nil {
-			http.Error(w, "Failed to register user", http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusCreated)
-	}).Methods("POST")
 }

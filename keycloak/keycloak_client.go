@@ -3,19 +3,12 @@ package keycloak
 import (
 	"SAIL-user-service/config"
 	"SAIL-user-service/models"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"log"
 )
-
-type Config struct {
-	KeycloakURL   string
-	KeycloakRealm string
-	AdminToken    string
-}
 
 type Client struct {
 	config *config.Config
@@ -34,7 +27,7 @@ func (kc *Client) GetClientToken() (string, error) {
 
 	url := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token", kc.config.KeycloakURL, kc.config.KeycloakRealm)
 
-	data := "client_id=user-microservice&client_secret=Z7njfSA8YR7kDkftQMKjlqzwM1yqnKLK&grant_type=client_credentials"
+	data := "client_id=user-microservice&client_secret=Z7njfSA8YR7kDkftQMKjlqzwM1yqnKLK&grant_type=client_credentials" //GET RID OF HARDCODED SECRET
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
 		log.Println("Failed to create request")
@@ -161,31 +154,6 @@ func (kc *Client) GetUserById(id string) (*models.User, error) {
 	log.Println("Returning user")
 	
 	return user, nil
-}
-
-func (kc *Client) RegisterUser(newUser models.User) error {
-	token, err := kc.GetClientToken()
-	if err != nil {
-		return fmt.Errorf("Failed to get token: %s", err)
-	}
-
-	url := fmt.Sprintf("%s/admin/realms/%s/users", kc.config.KeycloakURL, kc.config.KeycloakRealm)
-
-	body, _ := json.Marshal(newUser)
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(body))
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("Failed to register user: %s", resp.Status)
-	}
-	return nil
 }
 
 // adding roles to the json bc the /users endpoint doesn't by default
