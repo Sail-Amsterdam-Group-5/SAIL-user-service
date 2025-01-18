@@ -19,6 +19,22 @@ spec:
         image: ignacio6779/sail-user-service:d733a753acc0bce1154cd7cfaf0407cc21eacd27
         ports:
         - containerPort: 8080 # This is some kind of a port it seems like. Not sure tho. Know it now, is def standard stuff
+        env:
+        - name: KEYCLOAK_URL
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-url-secret
+              key: keycloakURL
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-client-id-secret
+              key: client_id
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-client-secret
+              key: client_secret
         resources:
           limits:
             cpu: "0.2"

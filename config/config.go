@@ -1,15 +1,21 @@
 package config
 
+import "os"
+
 type Config struct {
 	KeycloakURL   string
 	KeycloakRealm string
 	Port          string
+	ClientID      string
+	ClientSecret  string
 }
 
 func LoadConfig() (*Config, error) {
 	return &Config{
-		KeycloakURL:   "http://keycloak-route-oscar-dev.apps.inholland.hcs-lab.nl", //GET RID OF HARDCODED URL
+		KeycloakURL:   os.Getenv("KEYCLOAK_URL"),
 		KeycloakRealm: "sail-amsterdam",
 		Port:          "8080",
+		ClientID:      os.Getenv("CLIENT_ID"),
+		ClientSecret:  os.Getenv("CLIENT_SECRET"),
 	}, nil
 }

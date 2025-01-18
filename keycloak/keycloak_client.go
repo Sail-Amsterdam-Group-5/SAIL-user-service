@@ -27,7 +27,8 @@ func (kc *Client) GetClientToken() (string, error) {
 
 	url := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token", kc.config.KeycloakURL, kc.config.KeycloakRealm)
 
-	data := "client_id=user-microservice&client_secret=Z7njfSA8YR7kDkftQMKjlqzwM1yqnKLK&grant_type=client_credentials" //GET RID OF HARDCODED SECRET
+	data := fmt.Sprintf("client_id=%s&client_secret=%s&grant_type=client_credentials",
+		kc.config.ClientID, kc.config.ClientSecret)
 	req, err := http.NewRequest("POST", url, strings.NewReader(data))
 	if err != nil {
 		log.Println("Failed to create request")
