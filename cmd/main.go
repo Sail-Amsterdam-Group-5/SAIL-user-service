@@ -20,5 +20,5 @@ func main() {
 	handlers.RegisterUserHandlers(router, cfg)
 
 	log.Printf("Starting server on port %s...", cfg.Port)
-	log.Fatal(http.ListenAndServe(":"+cfg.Port, router)) //insh
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, router))
 }
