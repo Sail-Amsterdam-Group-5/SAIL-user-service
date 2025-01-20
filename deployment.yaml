@@ -18,7 +18,7 @@ spec:
       - name: sail-user-service
         image: ignacio6779/sail-user-service:fb016ebc1af8ee14d72ea4e438b2cf101d0883c1
         ports:
-        - containerPort: 8080 # This is some kind of a port it seems like. Not sure tho. Know it now, is def standard stuff
+        - containerPort: 8080
         env:
         - name: KEYCLOAK_URL
           valueFrom:
