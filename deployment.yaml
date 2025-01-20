@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sail-user-service
-        image: ignacio6779/sail-user-service:f85a115c250f8d4dfc5b6091dbd4813c75732265
+        image: ignacio6779/sail-user-service:fa7aa6daa79a3d4f278bc2101ec63242b45be651
         ports:
         - containerPort: 8080
         env:
