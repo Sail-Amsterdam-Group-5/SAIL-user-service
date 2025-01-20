@@ -9,8 +9,20 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// @title SAIL User Service API
+// @version 1.0
+// @description This is the API for the SAIL User Service
+// @termsOfService https://swagger.io/terms/
+// @contact.name API Support
+// @contact.url https://www.sail.com
+// @contact.email email.placeholder@gmail.com
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:8080
+// @BasePath /
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
@@ -27,6 +39,8 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})).Methods("GET")
+
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	router.Use(middleware.PrometheusMiddleware)
 
