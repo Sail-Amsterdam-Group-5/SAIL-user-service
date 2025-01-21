@@ -61,10 +61,7 @@ jobs:
           uses: actions/checkout@v3
 
         - name: Install Swag CLI
-          run: |
-            go get -u github.com/swaggo/swag/cmd/swag
-            echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-
+          run: go install -u github.com/swaggo/swag/cmd/swag
         - name: Generate Swagger Docs
           run: swag init -g cmd/main.go
 
