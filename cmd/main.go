@@ -4,11 +4,11 @@ import (
 	"SAIL-user-service/config"
 	"SAIL-user-service/handlers"
 	"SAIL-user-service/middleware"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -24,27 +24,43 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{}) // JSON format for structured logs
+	logger.SetLevel(logrus.InfoLevel)
+
+	logger.Info("Starting SAIL User Service API")
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Error loading config: %v", err)
+		logger.WithError(err).Fatal("Error loading config")
 	}
+
+	logger.WithField("port", cfg.Port).Info("Configuration loaded")
 
 	router := mux.NewRouter()
 
 	handlers.RegisterUserHandlers(router, cfg)
+	logger.Info("Registered user handlers")
 
 	router.Handle("/metrics", promhttp.Handler()).Methods("GET")
+	logger.Info("Registered /metrics endpoint")
 
 	router.Handle("/health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})).Methods("GET")
+	logger.Info("Registered /health endpoint")
 
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler) //since it's system wide docs
+	logger.Info("Registered Swagger documentation endpoint")
+
 
 	router.Use(middleware.PrometheusMiddleware)
+	logger.Info("Middleware applied")
 
 
-	log.Printf("Starting server on port %s...", cfg.Port)
-	log.Fatal(http.ListenAndServe(":"+cfg.Port, router))
+	logger.WithField("port", cfg.Port).Info("Starting server")
+	if err := http.ListenAndServe(":"+cfg.Port, router); err != nil {
+		logger.WithError(err).Fatal("Server failed to start")
+	}
 }
