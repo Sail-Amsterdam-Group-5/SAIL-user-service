@@ -51,7 +51,12 @@ func main() {
 	})).Methods("GET")
 	logger.Info("Registered /health endpoint")
 
-	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	router.PathPrefix("/docs/").Handler(http.StripPrefix("/docs/", http.FileServer(http.Dir("./docs"))))
+	logger.Info("Serving static files from /docs")
+
+	router.PathPrefix("/swagger").Handler(httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/docs/swagger.json"),
+	)).Methods("GET")
 	logger.Info("Registered Swagger documentation endpoint")
 
 
