@@ -51,7 +51,7 @@ func main() {
 	})).Methods("GET")
 	logger.Info("Registered /health endpoint")
 
-	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler) //since it's system wide docs
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	logger.Info("Registered Swagger documentation endpoint")
 
 
