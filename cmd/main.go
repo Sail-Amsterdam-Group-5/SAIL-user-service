@@ -40,7 +40,7 @@ func main() {
 		w.Write([]byte("OK"))
 	})).Methods("GET")
 
-	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler) //since it's system
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler) //since it's system wide docs
 
 	router.Use(middleware.PrometheusMiddleware)
 
