@@ -12,5 +12,6 @@ FROM debian:bookworm-slim
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY --from=builder /app/docs ./docs
 
 CMD ["./main"]

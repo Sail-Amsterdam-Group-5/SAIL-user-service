@@ -51,7 +51,7 @@ func main() {
 	})).Methods("GET")
 	logger.Info("Registered /health endpoint")
 
-	router.PathPrefix("/docs/").Handler(http.StripPrefix("/docs/", http.FileServer(http.Dir("./docs"))))
+	router.PathPrefix("/docs/").Handler(http.StripPrefix("/docs/", http.FileServer(http.Dir("./docs")))) //manually serving files
 	logger.Info("Serving static files from /docs")
 
 	router.PathPrefix("/swagger").Handler(httpSwagger.Handler(
